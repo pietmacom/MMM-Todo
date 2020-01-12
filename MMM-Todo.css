@@ -1,24 +1,24 @@
-.calendar .symbol {
+.MMM-Todo .symbol {
   padding-left: 0;
   padding-right: 10px;
   font-size: 80%;
   vertical-align: top;
 }
 
-.calendar .symbol span {
+.MMM-Todo .symbol span {
   display: inline-block;
   -ms-transform: translate(0, 2px); /* IE 9 */
   -webkit-transform: translate(0, 2px); /* Safari */
   transform: translate(0, 2px);
 }
 
-.calendar .title {
+.MMM-Todo .title {
   padding-left: 0;
   padding-right: 0;
 }
 
-.calendar .time {
-  padding-left: 30px;
+.MMM-Todo .time {
+  padding-left: 50px;
   text-align: right;
   vertical-align: top;
 }
