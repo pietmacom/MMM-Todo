@@ -256,6 +256,36 @@ Module.register("MMM-Todo", {
 				titleWrapper.className = "title " + titleClass;
 			}
 
+			if(this.config.timeFormat === "dateheaders"){
+
+				if (event.fullDayEvent) {
+					titleWrapper.colSpan = "2";
+					titleWrapper.align = "left";
+
+				} else {
+
+					var timeClass = this.timeClassForUrl(event.url);
+					var timeWrapper = document.createElement("td");
+					timeWrapper.className = "time light " + timeClass;
+					timeWrapper.align = "left";
+					timeWrapper.style.paddingLeft = "2px";
+					timeWrapper.innerHTML =  moment(event.startDate, "x").format("LT");
+					eventWrapper.appendChild(timeWrapper);
+					titleWrapper.align = "right";
+				}
+
+				eventWrapper.appendChild(titleWrapper);
+			} else {
+
+				eventWrapper.appendChild(titleWrapper);
+				
+				//timeWrapper.innerHTML += ' - '+ moment(event.startDate,'x').format('lll');
+				//console.log(event);
+				var timeClass = this.timeClassForUrl(event.url);
+				timeWrapper.className = "time light " + timeClass;
+				eventWrapper.appendChild(timeWrapper);
+			}
+
 			wrapper.appendChild(eventWrapper);
 
 			// Create fade effect.
