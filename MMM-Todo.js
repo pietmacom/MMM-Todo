@@ -357,12 +357,7 @@ Module.register("MMM-Todo", {
 							}
 						}
 					} else {
-						timeWrapper.innerHTML = this.capFirst(
-							this.translate("RUNNING", {
-								fallback: this.translate("RUNNING") + " {timeUntilEnd}",
-								timeUntilEnd: moment(event.endDate, "x").fromNow(true)
-							})
-						);
+						
 					}
 					if (this.config.showEnd) {
 						timeWrapper.innerHTML += "-";
