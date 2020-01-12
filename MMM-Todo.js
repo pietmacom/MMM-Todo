@@ -16,6 +16,8 @@ Module.register("MMM-Todo", {
 		displaySymbol: true,
 		defaultSymbol: "calendar", // Fontawesome Symbol see http://fontawesome.io/cheatsheet/
 		showLocation: false,
+		displayRepeatingCountTitle: false,
+		defaultRepeatingCountTitle: "",
 		maxTitleLength: 25,
 		wrapEvents: false, // wrap events to multiple lines breaking at maxTitleLength
 		maxTitleLines: 3,
@@ -170,7 +172,27 @@ Module.register("MMM-Todo", {
 		for (var e in events) {
 			var event = events[e];
 			var dateAsString = moment(event.startDate, "x").format(this.config.dateFormat);
-			
+			if(this.config.timeFormat === "dateheaders"){
+				if(lastSeenDate !== dateAsString){
+					var dateRow = document.createElement("tr");
+					dateRow.className = "normal";
+					var dateCell = document.createElement("td");
+
+					dateCell.colSpan = "3";
+					dateCell.innerHTML = dateAsString;
+					dateCell.style.paddingTop = "10px";
+					dateRow.appendChild(dateCell);
+					wrapper.appendChild(dateRow);
+
+					if (e >= startFade) {			//fading
+						currentFadeStep = e - startFade;
+						dateRow.style.opacity = 1 - (1 / fadeSteps * currentFadeStep);
+					}
+
+					lastSeenDate = dateAsString;
+				}
+			}
+
 			var eventWrapper = document.createElement("tr");
 
 			if (this.config.colored && !this.config.coloredSymbolOnly) {
@@ -203,7 +225,28 @@ Module.register("MMM-Todo", {
 					symbolWrapper.appendChild(symbol);
 				}
 				eventWrapper.appendChild(symbolWrapper);
+			} else if(this.config.timeFormat === "dateheaders"){
+				var blankCell = document.createElement("td");
+				blankCell.innerHTML = "&nbsp;&nbsp;&nbsp;";
+				eventWrapper.appendChild(blankCell);
 			}
+
+			var titleWrapper = document.createElement("td"),
+				repeatingCountTitle = "";
+
+			if (this.config.displayRepeatingCountTitle && event.firstYear !== undefined) {
+
+				repeatingCountTitle = this.countTitleForUrl(event.url);
+
+				if (repeatingCountTitle !== "") {
+					var thisYear = new Date(parseInt(event.startDate)).getFullYear(),
+						yearDiff = thisYear - event.firstYear;
+
+					repeatingCountTitle = ", " + yearDiff + ". " + repeatingCountTitle;
+				}
+			}
+
+			titleWrapper.innerHTML = this.titleTransform(event.title) + repeatingCountTitle;
 
 			var titleClass = this.titleClassForUrl(event.url);
 
@@ -464,6 +507,17 @@ Module.register("MMM-Todo", {
 	 */
 	colorForUrl: function (url) {
 		return this.getCalendarProperty(url, "color", "#fff");
+	},
+
+	/* countTitleForUrl(url)
+	 * Retrieves the name for a specific url.
+	 *
+	 * argument url string - Url to look for.
+	 *
+	 * return string - The Symbol
+	 */
+	countTitleForUrl: function (url) {
+		return this.getCalendarProperty(url, "repeatingCountTitle", this.config.defaultRepeatingCountTitle);
 	},
 
 	/* getCalendarProperty(url, property, defaultValue)
