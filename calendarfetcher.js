@@ -72,24 +72,6 @@ var CalendarFetcher = function(url, reloadInterval, excludedEvents, maximumEntri
 
 			for (var e in data) {
 				var event = data[e];
-				var now = new Date();
-				var today = moment().startOf("day").toDate();
-				var future = moment().startOf("day").add(maximumNumberOfDays, "days").subtract(1,"seconds").toDate(); // Subtract 1 second so that events that start on the middle of the night will not repeat.
-				var past = today;
-
-				if (includePastEvents) {
-					past = moment().startOf("day").subtract(maximumNumberOfDays, "days").toDate();
-				}
-
-				// FIXME:
-				// Ugly fix to solve the facebook birthday issue.
-				// Otherwise, the recurring events only show the birthday for next year.
-				var isFacebookBirthday = false;
-				if (typeof event.uid !== "undefined") {
-					if (event.uid.indexOf("@facebook.com") !== -1) {
-						isFacebookBirthday = true;
-					}
-				}
 				if (event.type === "VTODO") {
 					var status = event.status;
 					var completion = event.completion;
